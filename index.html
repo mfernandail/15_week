@@ -41,11 +41,26 @@
     <main>
       <h1>Conversor</h1>
 
+      <label for="currency">Choose a base currency:</label>
       <select id="currency" name="currency">
         <option value="" disabled selected>Select a currency</option>
       </select>
 
-      <section id="result" class="result"></section>
+      <!-- <section id="result" class="result"></section> -->
+
+      <section id="result" class="result">
+        <table>
+          <thead>
+            <tr>
+              <th id="head-currency">Currency</th>
+              <th id="head-date">Rate</th>
+            </tr>
+          </thead>
+          <tbody id="result-body">
+
+          </tbody>
+        </table>
+      </section>
 
     </main>
 
