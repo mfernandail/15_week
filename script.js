@@ -1,9 +1,11 @@
 const dropCurrency = document.getElementById('currency')
-const result = document.getElementById('result')
+const resultBody = document.getElementById('result-body')
+const headCurrency = document.getElementById('head-currency')
+const headDate = document.getElementById('head-date')
 
 document.addEventListener('DOMContentLoaded', function () {
   const url = 'https://api.frankfurter.dev/v1/currencies'
-  fetchCurrency(url, 1)
+  fetchCurrency(url, 'select')
 })
 
 dropCurrency.addEventListener('change', searchCurrency)
@@ -15,7 +17,7 @@ function searchCurrency(e) {
 
   console.log(currencySelected)
 
-  fetchCurrency(url, 2)
+  fetchCurrency(url, 'result')
 }
 
 async function fetchCurrency(url, typeEndpoint) {
@@ -26,7 +28,7 @@ async function fetchCurrency(url, typeEndpoint) {
 
     const data = await response.json()
 
-    typeEndpoint === 1 ? renderSelect(data) : renderResult(data)
+    typeEndpoint === 'select' ? renderSelect(data) : renderResult(data)
   } catch (error) {
     console.log('Error: ', error)
   }
@@ -44,26 +46,25 @@ function renderSelect(data) {
 }
 
 function renderResult(data) {
-  result.innerHTML = ''
+  resultBody.innerHTML = ''
+  headCurrency.innerHTML = ''
+  headDate.innerHTML = ''
+
   const { date, rates, base } = data
 
-  const dateP = document.createElement('p')
-  const baseP = document.createElement('p')
-  const table = document.createElement('tr')
+  const table = document.createElement('table')
 
-  dateP.textContent = date
-  baseP.textContent = base
+  headCurrency.textContent = `Base: ${base}`
+  headDate.textContent = `Date: ${date}`
 
-  Object.entries(rates).forEach((currency) => {
+  Object.entries(rates).forEach(([code, value]) => {
     const row = document.createElement('tr')
     row.innerHTML = `
-      <td>${currency[0]}</td>
-      <td>${currency[1]}</td>
+      <td>${code}</td>
+      <td>${value}</td>
     `
     table.appendChild(row)
   })
 
-  result.appendChild(dateP)
-  result.appendChild(baseP)
-  result.appendChild(table)
+  resultBody.appendChild(table)
 }
