@@ -54,7 +54,7 @@ label {
 select {
   width: 100%;
   padding: 0.6rem;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   border: 1px solid #ccc;
   margin-bottom: 1rem;
   font-size: 1rem;
@@ -64,12 +64,13 @@ button {
   padding: 0.6rem 1.2rem;
   margin: 0.5rem 0.5rem 1rem 0;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   background-color: #0077cc;
   color: white;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s;
+  width: 80px;
 }
 
 button:disabled {
@@ -106,3 +107,10 @@ p {
 .result tbody tr:hover {
   background-color: #f9f9f9;
 }
+
+.btn {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
