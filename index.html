@@ -41,33 +41,23 @@
     <main>
       <h1>Conversor</h1>
 
-      <label for="currency">Choose a base currency:</label>
-      <select id="currency" name="currency">
-        <option value="" disabled selected>Select a currency</option>
-      </select>
+      <div class="converter">
+        <div class="converter__group">
+          <label for="currency">Choose a base from currency:</label>
+          <select id="currency" name="currency">
+            <option value="" disabled selected>Select a currency</option>
+          </select>
+          <input disabled type="number" min="0" name="inputFrom" id="inputFrom" />
+        </div>
 
-      <section class="btn">
-        <button class="btn_select" id="currencyFrom" disabled>From</button>
-        <button class="btn_select" id="currencyTo" disabled>To</button>
-      </section>
-
-      <p id="currencyFromP"></p>
-      <p id="currencyToP"></p>
-
-      <section id="result" class="result">
-        <table>
-          <thead>
-            <tr>
-              <th id="head-currency">Currency</th>
-              <th id="head-date">Rate</th>
-            </tr>
-          </thead>
-          <tbody id="result-body">
-
-          </tbody>
-        </table>
-      </section>
-
+        <div class="converter__group">
+          <label for="currencyTo">Choose a base to currency:</label>
+          <select id="currencyTo" name="currencyTo">
+            <option value="" disabled selected>Select a currency</option>
+          </select>
+          <input disabled type="number" min="0" name="inputTo" id="inputTo" />
+        </div>
+      </div>
     </main>
 
     <footer>
