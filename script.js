@@ -1,26 +1,27 @@
 const dropCurrency = document.getElementById('currency')
-const resultBody = document.getElementById('result-body')
-const headCurrency = document.getElementById('head-currency')
-const headDate = document.getElementById('head-date')
+const dropCurrencyTo = document.getElementById('currencyTo')
+const inputFrom = document.getElementById('inputFrom')
+const inputTo = document.getElementById('inputTo')
+
+let inputFromCal
+let inputToCal
+
+let currenciesObj
+let currenciesObjFrom
+let currenciesObjTo
 
 document.addEventListener('DOMContentLoaded', function () {
   const url = 'https://api.frankfurter.dev/v1/currencies'
-  fetchCurrency(url, 'select')
+  fetchCurrency(url)
 })
 
-dropCurrency.addEventListener('change', searchCurrency)
+dropCurrency.addEventListener('change', searchCurrencySelectFrom)
+dropCurrencyTo.addEventListener('change', searchCurrencySelectTo)
 
-function searchCurrency(e) {
-  const currencySelected = e.target.value
+inputFrom.addEventListener('keydown', calculateFrom)
+inputTo.addEventListener('keydown', calculateTo)
 
-  const url = `https://api.frankfurter.dev/v1/latest?base=${currencySelected}`
-
-  console.log(currencySelected)
-
-  fetchCurrency(url, 'result')
-}
-
-async function fetchCurrency(url, typeEndpoint) {
+async function fetchCurrency(url) {
   try {
     const response = await fetch(url)
 
@@ -28,43 +29,81 @@ async function fetchCurrency(url, typeEndpoint) {
 
     const data = await response.json()
 
-    typeEndpoint === 'select' ? renderSelect(data) : renderResult(data)
+    renderSelect(data)
+
+    return data
   } catch (error) {
     console.log('Error: ', error)
   }
 }
 
+async function searchCurrency(currencySelected) {
+  //const currencySelected = e.target.value
+  const url = `https://api.frankfurter.dev/v1/latest?base=${currencySelected}`
+
+  fetchCurrency(url)
+  currenciesObj = await fetchCurrency(url)
+
+  return currenciesObj
+}
+
+async function searchCurrencySelectFrom(e) {
+  inputFrom.disabled = false
+  const currencySelected = e.target.value
+
+  const res = await searchCurrency(currencySelected)
+
+  currenciesObjFrom = currenciesObj
+
+  inputFrom.value = 1
+  console.log(res)
+}
+
+async function searchCurrencySelectTo(e) {
+  //inputTo.disabled = false
+
+  const currencySelected = e.target.value
+
+  const res = await searchCurrency(currencySelected)
+
+  currenciesObjTo = currenciesObj
+
+  const result = currenciesObjFrom.rates[currenciesObjTo.base]
+
+  inputTo.value = result
+}
+
 function renderSelect(data) {
   Object.keys(data).forEach((currencyCode) => {
-    const op = document.createElement('option')
+    const opFrom = document.createElement('option')
+    const opTo = document.createElement('option')
 
-    op.value = currencyCode
-    op.textContent = currencyCode
+    opFrom.value = currencyCode
+    opFrom.textContent = currencyCode
 
-    dropCurrency.appendChild(op)
+    opTo.value = currencyCode
+    opTo.textContent = currencyCode
+
+    dropCurrency.appendChild(opFrom)
+    dropCurrencyTo.appendChild(opTo)
   })
 }
 
-function renderResult(data) {
-  resultBody.innerHTML = ''
-  headCurrency.innerHTML = ''
-  headDate.innerHTML = ''
+function calculateFrom(e) {
+  if (inputFrom.value.length === 0) {
+    inputTo.value = ''
+  }
+  inputFromCal = Number(e.target.value)
 
-  const { date, rates, base } = data
+  const result = currenciesObjFrom.rates[currenciesObjTo.base] * inputFromCal
+  inputTo.value = result
+}
 
-  const table = document.createElement('table')
+function calculateTo(e) {
+  if (inputTo.value.length === 0) {
+    inputFrom.value = ''
+  }
 
-  headCurrency.textContent = `Base: ${base}`
-  headDate.textContent = `Date: ${date}`
-
-  Object.entries(rates).forEach(([code, value]) => {
-    const row = document.createElement('tr')
-    row.innerHTML = `
-      <td>${code}</td>
-      <td>${value}</td>
-    `
-    table.appendChild(row)
-  })
-
-  resultBody.appendChild(table)
+  const result = currenciesObjFrom.rates[currenciesObjTo.base] * inputFromCal
+  inputTo.value = result
 }
