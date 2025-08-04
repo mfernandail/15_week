@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
 dropCurrency.addEventListener('change', searchCurrencySelectFrom)
 dropCurrencyTo.addEventListener('change', searchCurrencySelectTo)
 
-inputFrom.addEventListener('keydown', calculateFrom)
-inputTo.addEventListener('keydown', calculateTo)
+inputFrom.addEventListener('input', calculateFrom)
+inputTo.addEventListener('input', calculateTo)
 
 async function fetchCurrency(url) {
   try {
@@ -41,7 +41,6 @@ async function searchCurrency(currencySelected) {
   //const currencySelected = e.target.value
   const url = `https://api.frankfurter.dev/v1/latest?base=${currencySelected}`
 
-  fetchCurrency(url)
   currenciesObj = await fetchCurrency(url)
 
   return currenciesObj
@@ -92,6 +91,7 @@ function renderSelect(data) {
 function calculateFrom(e) {
   if (inputFrom.value.length === 0) {
     inputTo.value = ''
+    return
   }
   inputFromCal = Number(e.target.value)
 
@@ -100,8 +100,9 @@ function calculateFrom(e) {
 }
 
 function calculateTo(e) {
-  if (inputTo.value.length === 0) {
+  if (inputTo.value.length === 0 || !currenciesObjFrom || !currenciesObjTo) {
     inputFrom.value = ''
+    return
   }
 
   const result = currenciesObjFrom.rates[currenciesObjTo.base] * inputFromCal
